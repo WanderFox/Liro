@@ -2,7 +2,15 @@
   "name": "liro",
   "productName": "Liro",
   "version": "1.0.0",
-  "description": "Liro — клиент совместной доски для локальной сети",
+  "description": "Liro — desktop client for the self-hosted LAN whiteboard",
+  "homepage": "https://github.com/WanderFox/Liro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WanderFox/Liro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WanderFox/Liro/issues"
+  },
   "author": "Liro",
   "license": "MIT",
   "main": "main.js",

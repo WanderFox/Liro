@@ -2,10 +2,20 @@
   "name": "liro-server",
   "version": "1.0.0",
   "description": "Liro — self-hosted collaborative whiteboard server for a local network",
+  "homepage": "https://github.com/WanderFox/Liro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WanderFox/Liro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WanderFox/Liro/issues"
+  },
   "type": "module",
   "main": "src/index.js",
   "license": "MIT",
-  "engines": { "node": ">=18.17" },
+  "engines": {
+    "node": ">=18.17"
+  },
   "scripts": {
     "start": "node src/index.js",
     "test": "node --test test/*.test.js"
