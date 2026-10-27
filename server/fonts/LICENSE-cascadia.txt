@@ -1,0 +1,4 @@
+Cascadia Code / Cascadia Mono
+Copyright (c) 2019 - Present, Microsoft Corporation, with Reserved Font Name Cascadia Code.
+Licensed under the SIL Open Font License, Version 1.1 (same text as LICENSE-opensans.txt).
+https://github.com/microsoft/cascadia-code

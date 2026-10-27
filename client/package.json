@@ -1,0 +1,76 @@
+{
+  "name": "liro",
+  "productName": "Liro",
+  "version": "1.0.0",
+  "description": "Liro — клиент совместной доски для локальной сети",
+  "author": "Liro",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "sync-web": "node scripts/sync-web.js",
+    "start": "npm run sync-web && electron .",
+    "dist:win": "npm run sync-web && electron-builder --win",
+    "dist:linux": "npm run sync-web && electron-builder --linux"
+  },
+  "dependencies": {
+    "bonjour-service": "^1.3.0"
+  },
+  "build": {
+    "appId": "loc.liro.client",
+    "productName": "Liro",
+    "artifactName": "Liro-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**",
+      "web/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "portable": {
+      "artifactName": "Liro-${version}-portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Office",
+      "icon": "build/icon.png",
+      "synopsis": "Совместная доска для локальной сети"
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
+  }
+}

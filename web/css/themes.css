@@ -1,0 +1,24 @@
+/* Liro uses a single dark theme. */
+:root[data-theme="dark"] {
+  --bg: #121218;
+  --panel: #1e1e27;
+  --hover: #2a2a36;
+  --input: #17171f;
+  --text: #e8e8f0;
+  --muted: #9a9ab0;
+  --line: #34343f;
+  --accent: #6b85ff;
+  --accent-text: #ffffff;
+  --accent-soft: #2a3366;
+  --badge: #2a2a36;
+  --shadow: 0 2px 12px rgba(0, 0, 0, .5);
+  --canvas: #16161d;
+  --dot: #30303c;
+  --ink: #e8e8f0;
+  --frame-bg: #1e1e27;
+  --frame-border: #4a4a58;
+  --card: #1e1e27;
+  --card-head: #262631;
+  --thumb: #1a1a22;
+  color-scheme: dark;
+}

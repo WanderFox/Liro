@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Liro</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+  <!-- Start screen: servers (desktop client) and boards -->
+  <section id="home" class="screen">
+    <header class="home-head">
+      <div class="logo"><img src="icon.svg" alt=""><span>Liro</span></div>
+      <div class="row">
+        <select id="lang-select" title="Язык интерфейса" data-i18n-title></select>
+        <label class="username"><span data-i18n>Ваше имя</span> <input id="user-name" maxlength="60" placeholder="Гость" data-i18n-placeholder></label>
+      </div>
+    </header>
+
+    <div class="home-body">
+      <aside id="servers-panel" class="panel">
+        <h2 data-i18n>Серверы</h2>
+        <div id="server-list" class="list"></div>
+        <button id="btn-discover" class="btn" data-i18n>Найти в сети</button>
+        <form id="add-server" class="row">
+          <input id="server-address" placeholder="liro.loc или 192.168.1.10:1919" data-i18n-placeholder>
+          <button class="btn primary" data-i18n>Подключить</button>
+        </form>
+      </aside>
+
+      <main class="panel boards-panel">
+        <div class="boards-head">
+          <h2 id="boards-title" data-i18n>Доски</h2>
+          <div class="row">
+            <span id="server-state" class="badge"></span>
+            <button id="btn-backup" class="btn" title="Сохранить или восстановить бэкап" data-i18n-title data-i18n>Бэкап</button>
+            <button id="btn-refresh" class="btn" title="Обновить" data-i18n-title>⟳</button>
+            <button id="btn-new-board" class="btn primary" data-i18n>+ Новая доска</button>
+          </div>
+        </div>
+        <div id="board-list" class="board-grid"></div>
+      </main>
+    </div>
+  </section>
+
+  <!-- Board editor -->
+  <section id="board" class="screen hidden">
+    <header class="topbar">
+      <button id="btn-back" class="btn icon" title="К списку досок" data-i18n-title>←</button>
+      <nav id="crumbs" class="crumbs"></nav>
+      <input id="board-name" class="board-name" maxlength="200">
+      <span id="sync-status" class="badge"></span>
+      <span id="disk-status" class="badge hidden"></span>
+      <button id="btn-board-backup" class="btn" title="Бэкап этой доски" data-i18n-title data-i18n>Бэкап</button>
+      <div class="spacer"></div>
+      <div id="peers" class="peers"></div>
+      <label class="toggle" title="Хранить доску и её файлы на этом компьютере и работать без сети" data-i18n-title>
+        <input type="checkbox" id="cache-toggle"><span data-i18n>Кешировать</span>
+      </label>
+    </header>
+
+    <div id="viewport" tabindex="0">
+      <div id="world"></div>
+      <div id="overlay"></div>
+      <div id="drop-hint" class="hidden" data-i18n>Отпустите файлы, чтобы добавить на доску</div>
+    </div>
+
+    <nav id="tools" class="toolbar">
+      <button data-tool="select" title="Выделение (V)" data-i18n-title>⬚</button>
+      <button data-tool="hand" title="Рука (H, пробел)" data-i18n-title>✋</button>
+      <hr>
+      <button data-tool="sticky" title="Стикер (N)" data-i18n-title>🗒</button>
+      <button data-tool="text" title="Текст (T)" data-i18n-title>T</button>
+      <button data-tool="shape" title="Фигуры и линии (R, O, L, A)" data-i18n-title>◻</button>
+      <button data-tool="pen" title="Карандаш (P)" data-i18n-title>✎</button>
+      <button data-tool="eraser" title="Ластик (E)" data-i18n-title>⌫</button>
+      <button data-tool="checklist" title="Список задач (K)" data-i18n-title>☑</button>
+      <button data-tool="board" title="Вложенная доска (B)" data-i18n-title>▣</button>
+      <button data-tool="table" title="Таблица (G)" data-i18n-title>▦</button>
+      <button data-tool="calendar" title="Календарь на год" data-i18n-title>▤</button>
+      <button data-tool="frame" title="Фрейм (F)" data-i18n-title>#</button>
+      <button data-tool="comment" title="Комментарий (C)" data-i18n-title>💬</button>
+      <button id="btn-stickers" title="Стикеры" data-i18n-title>☺</button>
+      <hr>
+      <button id="btn-upload" title="Загрузить изображение, видео, аудио или файл" data-i18n-title>⤒</button>
+      <hr>
+      <button id="btn-undo" title="Отменить (Ctrl+Z)" data-i18n-title>↶</button>
+      <button id="btn-redo" title="Повторить (Ctrl+Shift+Z)" data-i18n-title>↷</button>
+    </nav>
+
+    <div id="shape-picker" class="menu hidden"></div>
+
+    <aside id="shape-library" class="side-panel hidden">
+      <div class="side-head"><b data-i18n>Фигуры</b><button id="shape-library-close" class="btn icon" title="Закрыть" data-i18n-title>✕</button></div>
+      <input id="shape-search" type="search" placeholder="Поиск фигур" data-i18n-placeholder>
+      <div id="shape-library-body" class="side-body"></div>
+    </aside>
+
+    <aside id="sticker-panel" class="side-panel hidden">
+      <div class="side-head"><b data-i18n>Стикеры</b><button id="sticker-panel-close" class="btn icon" title="Закрыть" data-i18n-title>✕</button></div>
+      <input id="sticker-search" type="search" placeholder="Поиск стикеров" data-i18n-placeholder>
+      <div id="sticker-body" class="side-body"></div>
+    </aside>
+
+    <div id="comment-popover" class="comment-popover hidden"></div>
+    <div id="props" class="props hidden"></div>
+
+    <div class="zoombar">
+      <button id="zoom-out" class="btn icon">−</button>
+      <button id="zoom-level" class="btn" title="100%">100%</button>
+      <button id="zoom-in" class="btn icon">+</button>
+      <button id="zoom-fit" class="btn" title="Показать всё (Shift+1)" data-i18n-title>⤢</button>
+    </div>
+    <input type="file" id="file-input" multiple hidden>
+  </section>
+
+  <div id="modal-root"></div>
+  <div id="toasts"></div>
+
+  <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }</script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
