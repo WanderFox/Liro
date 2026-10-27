@@ -1,251 +1,201 @@
+<div align="center">
+
+<img src="docs/logo.png" width="96" alt="Liro logo">
+
 # Liro
 
-Локальный клон Miro: сервер совместных досок для локальной сети и десктопные клиенты для Windows и Linux.
-Аккаунтов нет: все, кто видит сервер в сети, видят и редактируют его доски.
+**A self-hosted collaborative whiteboard for your local network.**
+Inspired by Miro and Milanote — but your boards live on your own server, work offline and need no accounts.
 
-```
-server/   сервер: HTTP API, WebSocket-синхронизация, хранение досок и медиа, обнаружение в сети, DNS для liro.loc
-web/      интерфейс доски (общий для браузера и десктопного клиента)
-client/   десктопный клиент (Electron): поиск серверов, локальный кеш, офлайн-режим
-deploy/   установка, обновление и настройка сервера: Linux (systemd) и Windows (deploy/windows)
-```
+**English** · [Русский](README.ru.md) · [中文](README.zh-CN.md)
 
-## Возможности
+![License: MIT](https://img.shields.io/badge/license-MIT-4262ff)
+![Server: Linux | Windows](https://img.shields.io/badge/server-Linux%20%7C%20Windows-2b2b35)
+![Clients: Windows | Linux AppImage | Browser](https://img.shields.io/badge/clients-Windows%20%7C%20Linux%20AppImage%20%7C%20Browser-2b2b35)
+![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-8fd14f)
 
-- Стикеры, текст со списками (маркированные и нумерованные, вложенность через Tab), карандаш со сглаживанием,
-  ластик, фреймы
-- Шрифты с сервера (23 семейства с кириллицей, свободные лицензии) и загрузка своих шрифтов с клиента;
-  размер шрифта вводится вручную или стрелками
-- Цвета: палитра, цветовой круг, свои пресеты; прозрачность заливки и линий; настраиваемый пунктир
-- Библиотека из 48 фигур (основные, блок-схемы, выноски) и **свои фигуры из SVG**: загружаются на сервер
-  и появляются у всех клиентов
-- Линии: прямая, стрелка, ломаная, кривая, разделитель; разные концы; привязка к элементам; подпись на линии
-- Выравнивание: магнитные направляющие (Alt — без привязки), «выровнять» и «распределить»
-- Многоуровневые списки задач: вложенность кнопками на панели или Tab / Shift+Tab, перетаскивание пунктов
-  за ручку слева (вместе с подпунктами, сдвиг вправо — вложить), отметка родителя отмечает всё внутри,
-  отмеченные пункты зачёркиваются, счётчик и прогресс
-- Таблицы (ячейки, заливка, строки и столбцы) и **календарь на год** с выбором года
-- **Вложенные доски**: плитка с векторной иконкой (цвет, прозрачность, цвет иконки), свои SVG-иконки
-  (на сервер, а без сервера — на этот компьютер), «хлебные крошки» и кнопка назад; вложенные доски
-  не показываются в общем списке
-- Комментарии, ссылки-карточки с превью (картинки превью хранятся на сервере), стикер-паки
-- Изображения, видео, аудио, любые файлы и **3D-модели** (glTF/GLB, FBX, OBJ+MTL, STL, PLY, 3MF, DAE):
-  в покое показывается миниатюра, двойной клик — вращение; ракурс запоминается, модель можно скачать
-- Совместная работа в реальном времени, курсоры и выделения участников
-- Кеширование досок, работа без сети, **локальные доски** без сервера («Локальные доски» в списке серверов,
-  в браузере тоже) с переносом на сервер, создание новых досок, пока сервер недоступен
-- **Бэкапы**: всего сервера, отдельной доски (с вложенными), локальных досок с настройками; восстановление
-  с выбором — заменять существующее или только добавить недостающее
-- Интерфейс на русском и английском (по умолчанию — язык системы)
-- Тёмная тема
+<img src="docs/screenshots/board.png" alt="A Liro board with a flowchart, sticky notes, a checklist, a table, a link card, nested boards and a 3D model" width="100%">
 
-## Сервер (Linux)
+</div>
 
-Нужен Node.js 18+ (скрипт установит Node.js 22, если его нет; для apt и dnf).
+## Why Liro
 
-```bash
-sudo ./deploy/install.sh
-```
+- **Your network, your data.** One small Node.js server on Linux or Windows; boards and files are plain folders on its disk.
+- **Real-time teamwork.** Everyone on the LAN edits the same board and sees each other's cursors and selections.
+- **Offline first.** Cache a board on your computer and keep working when the server is down — Liro asks how to merge when it comes back.
+- **No accounts, no cloud, no tracking.** Open the app, pick the server it found on the network, start drawing.
 
-Скрипт копирует код в `/opt/liro`, данные хранит в `/var/lib/liro`, настройки — в `/etc/liro/liro.env`,
-создаёт службу `liro` и открывает порты в ufw/firewalld. Управление:
+## Features
 
-```bash
-sudo systemctl restart liro
-```
+| | |
+|---|---|
+| 🗒️ **Content** | Sticky notes, text with bulleted/numbered lists, 48 shapes (basic, flowchart, callouts) and your own SVG shapes, lines and arrows (straight, elbow, curved) with labels and connection to shapes, freehand pen with smoothing, frames |
+| ✅ **Structure** | Nested checklists with drag & drop and progress, tables, a year calendar for any year, comments with threads, nested boards with folder icons and breadcrumbs |
+| 🖼️ **Media** | Images, video, audio, any files, link cards with previews (cached on the server), sticker packs, 3D models (glTF/GLB, FBX, OBJ+MTL, STL, PLY, 3MF, DAE) with a rotatable viewer |
+| 🎨 **Styling** | Colour wheel with saved presets, fill and line opacity, dash settings, 23 bundled fonts plus your own uploads, smart alignment guides, align & distribute |
+| 👥 **Collaboration** | Live editing, cursors and selections of other people, conflict-free merging of concurrent edits, undo/redo |
+| 📴 **Offline & local** | Cached boards work without the server; create new boards offline; *Local boards* that never leave your computer and can later be moved to a server |
+| 🗄️ **Admin** | Backups of the whole server, a single board or your local boards; disk space limits; unused files cleaned up after 24 h; install, update and storage-move scripts for Linux and Windows |
+| 🌍 **Languages** | English and Russian interface (follows the system language) |
 
-```bash
-journalctl -u liro -f
-```
+## Screenshots
 
-Порты: `1919/tcp` (веб и API), `1919/udp` (обнаружение клиентами), `5353/udp` (mDNS),
-`80/tcp` (необязательно, чтобы `http://liro.loc` открывался без порта), `53/udp` (необязательно, DNS для liro.loc).
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/home.png" alt="Server list and boards"><br><sub><b>Servers and boards.</b> Servers found on the network, local boards, caching and backups.</sub></td>
+    <td width="50%"><img src="docs/screenshots/shapes.png" alt="Shape library"><br><sub><b>Shape library.</b> Basic shapes, flowchart, callouts and your own SVG shapes.</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/collaboration.png" alt="Comments, checklist and table"><br><sub><b>Working together.</b> Comment threads, nested checklists, tables and live cursors.</sub></td>
+    <td><img src="docs/screenshots/model.png" alt="3D model viewer"><br><sub><b>3D models.</b> Rotate a model right on the board; it remembers the view.</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/nested-boards.png" alt="Nested board"><br><sub><b>Nested boards.</b> Boards inside boards with breadcrumbs.</sub></td>
+    <td><img src="docs/screenshots/calendar.png" alt="Year calendar"><br><sub><b>Year calendar.</b> A big calendar for any year, built from an editable table.</sub></td>
+  </tr>
+</table>
 
-Резервная копия — это папка `/var/lib/liro` целиком. Каждая операция сразу пишется в журнал `ops.log`
-доски, поэтому даже внезапное падение сервера ничего не теряет.
+## Getting started
 
-**Обновление до новой версии** (доски, настройки и служба сохраняются; если новая версия не запустится,
-скрипт вернёт старую):
+### 1. Run the server
+
+<details open>
+<summary><b>Linux</b> (systemd)</summary>
 
 ```bash
-sudo bash deploy/update.sh
+tar xzf liro-src.tar.gz && cd liro
+sudo bash deploy/install.sh
 ```
 
-**Перенос хранилища в другую папку** (сервер останавливается, данные переносятся, сервер запускается с новым путём):
+Installs Node.js 22 if needed, copies the server to `/opt/liro`, keeps boards in `/var/lib/liro`, settings in
+`/etc/liro/liro.env`, starts the `liro` service and opens firewall ports.
 
 ```bash
-sudo bash deploy/configure.sh --data /mnt/storage/liro
+sudo bash deploy/update.sh                           # update to a new version, keeps boards and settings
+sudo bash deploy/configure.sh --data /mnt/storage/liro  # move the board storage
+journalctl -u liro -f                                # logs
 ```
+</details>
 
-### Удалённое и свободное место
+<details>
+<summary><b>Windows</b> (PowerShell as administrator)</summary>
 
-- Файлы, которые больше не используются на доске (элемент удалён), помечаются датой и удаляются через сутки,
-  поэтому отмена удаления в течение дня продолжает работать. Так же через сутки удаляются вложенные доски,
-  плитку которых убрали с родительской доски. Срок — `LIRO_MEDIA_GRACE_HOURS`.
-- Сервер следит за свободным местом на диске с данными. Меньше 10 ГБ — участники видят предупреждение;
-  меньше 5 ГБ — добавлять новое нельзя, можно только редактировать существующее
-  (`LIRO_DISK_WARN_GB`, `LIRO_DISK_BLOCK_GB`).
-
-## Сервер (Windows)
-
-PowerShell **от имени администратора**, из распакованного архива:
-
-```bash
-powershell -ExecutionPolicy Bypass -File deploy\windows\install.ps1
-```
-
-Параметры: `-DataDir D:\LiroData` (где хранить доски), `-Port 1919`, `-Name "Liro офис"`.
-Скрипт ставит Node.js LTS через winget (если его нет), копирует сервер в `C:\Program Files\Liro Server`,
-создаёт настройки `C:\ProgramData\Liro\liro.env`, задачу «Liro Server» (запуск при старте Windows от SYSTEM,
-перезапуск при сбое) и правила брандмауэра. Журнал: `C:\ProgramData\Liro\logs\liro.log`.
-
-```bash
+```powershell
+powershell -ExecutionPolicy Bypass -File deploy\windows\install.ps1 -DataDir D:\LiroData
 powershell -ExecutionPolicy Bypass -File deploy\windows\update.ps1
-```
-
-```bash
 powershell -ExecutionPolicy Bypass -File deploy\windows\configure.ps1 -DataDir E:\LiroData
-```
-
-```bash
 powershell -ExecutionPolicy Bypass -File deploy\windows\uninstall.ps1
 ```
 
-`update.ps1` обновляет код, не трогая доски, настройки и задачу; `configure.ps1` переносит хранилище;
-`uninstall.ps1` удаляет программу, но оставляет доски и настройки.
+The server runs as the scheduled task *Liro Server* (starts with Windows, restarts on failure).
+Settings: `C:\ProgramData\Liro\liro.env`, log: `C:\ProgramData\Liro\logs\liro.log`.
+</details>
 
-### Адрес liro.loc
-
-Клиенты находят сервер сами (UDP-broadcast и mDNS), имя для этого не нужно. Чтобы `http://liro.loc:1919`
-открывался в обычном браузере, имя должно резолвиться в сети. Варианты:
-
-1. **Роутер / dnsmasq** (лучший вариант): направьте зону `loc` на сервер Liro, у которого включён встроенный
-   DNS (`LIRO_DNS=1`). Для dnsmasq/OpenWrt: `server=/loc/192.168.1.10`. Либо просто добавьте статическую
-   запись `liro.loc → 192.168.1.10` в DNS роутера.
-2. **Без роутера**: строка в hosts на машине клиента — `192.168.1.10 liro.loc`
-   (Windows: `C:\Windows\System32\drivers\etc\hosts`, Linux: `/etc/hosts`).
-
-По IP сервер доступен всегда: `http://<IP-сервера>:1919`. В браузере работает полноценный редактор,
-только без кеширования (кеш — функция десктопного клиента).
-
-### Запуск без установки
+<details>
+<summary><b>Without installing</b></summary>
 
 ```bash
 cd server && npm install && npm start
 ```
+</details>
 
-Настройки — переменные окружения из `deploy/liro.env` или файл, указанный в `LIRO_CONFIG`
-(по умолчанию `/etc/liro/liro.env` на Linux и `C:\ProgramData\Liro\liro.env` на Windows).
+The board is now available at `http://<server-ip>:1919` — in any browser, or in the desktop clients.
 
-## Клиенты
+### 2. Install a client
 
-| Платформа | Файл |
-|-----------|------|
-| Windows, установщик | `client/dist/Liro-1.0.0-win-x64.exe` |
-| Windows, портативная | `client/dist/Liro-1.0.0-portable.exe` |
-| Linux | `client/dist/Liro-1.0.0-linux-x86_64.AppImage` |
+Download from [Releases](../../releases/latest):
 
-Сборка Windows (на Windows):
+| Platform | File |
+|---|---|
+| Windows (installer) | `Liro-<version>-win-x64.exe` |
+| Windows (portable) | `Liro-<version>-portable.exe` |
+| Linux | `Liro-<version>-linux-x86_64.AppImage` (`chmod +x`, needs `libfuse2`) |
 
-```bash
-cd client && npm install && npm run dist:win
-```
+The client finds Liro servers on the network automatically (UDP broadcast and mDNS). You can also connect by
+address: `liro.loc`, `192.168.1.10` or `192.168.1.10:1919`.
 
-Сборка AppImage (на Linux или в WSL — на Windows её собрать нельзя, нужен `mksquashfs`):
+### 3. Optional: the `liro.loc` name
 
-```bash
-cd client && ./build-linux.sh
-```
+The clients don't need it, but browsers do. Either add a DNS record `liro.loc → <server-ip>` on your router
+(dnsmasq: `server=/loc/<server-ip>` with the built-in DNS responder `LIRO_DNS=1`), or add
+`<server-ip> liro.loc` to the `hosts` file of each computer.
 
-Запуск AppImage: `chmod +x Liro-*.AppImage && ./Liro-*.AppImage`. На новых Ubuntu может понадобиться
-пакет `libfuse2`.
+## Working offline
 
-### Как пользоваться
+- Tick **Cache** on a board: the board and all its files are stored on your computer and kept in sync.
+- If the server becomes unreachable, a cached board stays fully editable. Your changes are queued on disk (they survive restarts).
+- When the server is back, Liro asks: **update the board on the server**, **save your version as a copy**, or **discard your changes**.
+- New boards can be created while the server is offline — they are uploaded when it returns.
+- **Local boards** live only on your computer (or in your browser) and can be moved to any server later.
 
-1. Клиент при запуске ищет серверы в сети («Найти в сети»). Можно ввести адрес вручную: `liro.loc`,
-   `192.168.1.10` или `192.168.1.10:1919` (без порта подставляется 1919).
-2. Выберите сервер, откройте или создайте доску.
-3. Галочка **«Кешировать»** (в карточке доски или в шапке доски) хранит доску и все её файлы на компьютере
-   и держит копию в синхронизации с сервером.
+## Backups
 
-### Офлайн-режим
+The **Backup** button exists in three places:
 
-- Если сервер недоступен, кешированные доски открываются и редактируются как обычно. Все действия
-  записываются в очередь на диске (переживают перезапуск клиента), новые картинки, видео и аудио
-  сохраняются локально.
-- Когда связь вернётся, клиент спросит, что сделать с изменениями:
-  - **Обновить доску на сервере** — загрузить новые файлы и применить ваши действия поверх текущей серверной доски
-    (изменения других участников за это время сохраняются);
-  - **Сохранить копией** — создать на сервере новую доску с вашей офлайн-версией;
-  - **Отменить мои изменения** — взять версию с сервера.
-- Некешированная доска без связи открыта только для просмотра и переподключается автоматически.
-- Новую доску можно создать и без связи с сервером: она сразу кешируется, а когда сервер появится,
-  клиент предложит загрузить её туда.
-- **Локальные доски** в списке серверов — доски, которые живут только на этом компьютере (в браузере —
-  в хранилище браузера). Кнопка «На сервер…» переносит доску (с файлами и вложенными досками) на сервер.
-- Иконки, фигуры и шрифты, загруженные без сервера, хранятся локально. При подключении к серверу клиент
-  предложит загрузить их туда.
+| Where | Saves | Restores into |
+|---|---|---|
+| Board list of a server | All boards with files, uploaded fonts, shapes, icons and sticker packs | That server |
+| *Local boards* | All local boards, local fonts/shapes/icons and client settings | Local boards |
+| An open board | This board with its nested boards and files | Where the board is |
 
-### Бэкапы
+Backups are plain `.tar` archives named after what they contain (`Liro-server-…`, `Liro-board-…`, `Liro-local-…`)
+with a `manifest.json` inside. When restoring you choose whether to replace existing boards and files or only add missing ones.
 
-Кнопка **«Бэкап»** есть в трёх местах, у каждой своя область:
+## Configuration
 
-| Где | Сохраняет | Восстанавливает |
-|-----|-----------|-----------------|
-| Список досок сервера | все доски сервера с файлами, загруженные шрифты, фигуры, иконки, стикер-паки | на этот сервер |
-| Список «Локальные доски» | все локальные доски с файлами, локальные шрифты/фигуры/иконки и настройки клиента | в локальные доски |
-| Открытая доска | эту доску вместе с вложенными досками и файлами | туда же, где открыта доска |
+Server settings are environment variables, usually set in `liro.env`:
 
-Бэкап — обычный архив `.tar`; имя говорит, что внутри: `Liro-server-<сервер>-<дата>.tar`,
-`Liro-board-<доска>-<дата>.tar`, `Liro-local-Локальные доски-<дата>.tar`. Внутри `manifest.json`
-с типом, названием, датой и списком досок. При восстановлении показывается, что это за бэкап, и спрашивается,
-заменять ли существующие доски и файлы с такими же именами: да — перезаписать, нет — добавить только недостающее.
-Любой бэкап можно восстановить и на сервер, и в локальные доски. Закешированную доску можно сохранить
-в бэкап и без связи с сервером.
+| Variable | Default | Description |
+|---|---|---|
+| `LIRO_NAME` | `Liro (<hostname>)` | Server name shown in the clients |
+| `LIRO_PORT` | `1919` | HTTP/WebSocket port (UDP discovery uses the same number) |
+| `LIRO_EXTRA_PORTS` | — | Extra HTTP ports, e.g. `80` for `http://liro.loc` |
+| `LIRO_DATA` | `server/data` | Boards, media, fonts, shapes, icons, stickers |
+| `LIRO_HOSTNAME` | `liro.loc` | Name answered by the built-in DNS responder |
+| `LIRO_DNS` | `0` | Built-in DNS responder on port 53 |
+| `LIRO_MDNS` | `1` | Announce the server via mDNS |
+| `LIRO_MAX_UPLOAD_MB` | `2048` | Max size of one uploaded file |
+| `LIRO_DISK_WARN_GB` / `LIRO_DISK_BLOCK_GB` | `10` / `5` | Warn about low disk space / allow editing only |
+| `LIRO_MEDIA_GRACE_HOURS` | `24` | Unused files are deleted after this time |
+| `LIRO_CONFIG` | `/etc/liro/liro.env`, `%ProgramData%\Liro\liro.env` | Settings file to read |
 
-### Горячие клавиши
+Ports: `1919/tcp` (web, API), `1919/udp` (discovery), `5353/udp` (mDNS), optional `80/tcp` and `53/udp`.
 
-`V` выделение · `H`/пробел рука · `N` стикер · `T` текст · `R` прямоугольник · `O` эллипс · `L` линия · `P` карандаш ·
-`E` ластик · `F` фрейм · `K` список задач · `C` комментарий · `G` таблица · `B` вложенная доска · `Del` удалить · `Ctrl+Z`/`Ctrl+Shift+Z` отмена/повтор · `Ctrl+C/V/X/D` · `Ctrl+A` ·
-`Shift+1` показать всё · `Shift+0` масштаб 100% · стрелки — сдвиг (с `Shift` — на 10) · двойной клик — стикер/редактирование.
-Колесо мыши — масштаб, `Shift`+колесо — горизонтальная прокрутка, тачпад — прокрутка, правая/средняя кнопка — перемещение.
+**Sticker packs:** drop a folder of images into `<data>/stickers/<pack>/` (optional `pack.json` with `{"name": "…"}`).
+They appear in all clients without a restart.
 
-### Два клиента на одном компьютере
+## Keyboard shortcuts
 
-```bash
-LIRO_PROFILE=/tmp/liro-2 ./Liro.AppImage
-```
+| Key | Action | Key | Action |
+|---|---|---|---|
+| `V` | Select | `H` / `Space` | Hand |
+| `N` | Sticky note | `T` | Text |
+| `R` / `O` | Rectangle / Oval | `L` / `A` | Line / Arrow |
+| `P` | Pen | `E` | Eraser |
+| `K` | Checklist | `G` | Table |
+| `B` | Nested board | `F` | Frame |
+| `C` | Comment | `Del` | Delete |
+| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo / Redo | `Ctrl+C` / `V` / `D` | Copy / Paste / Duplicate |
+| `Shift+1` | Zoom to fit | `Alt` while dragging | Move without snapping |
 
-## Тесты
+## Building from source
 
 ```bash
-cd server && npm install && npm test
+cd server && npm install && npm test          # server + 15 end-to-end tests
+cd client && npm install && npm run dist:win   # Windows installer + portable (on Windows)
+cd client && bash build-linux.sh               # Linux AppImage (on Linux or WSL)
 ```
 
-Сквозные тесты: настоящий сервер и движок синхронизации клиента — API, повторная отправка операций,
-медиа с проверкой хеша и Range, UDP-обнаружение, DNS, одновременная правка двумя клиентами,
-офлайн-сценарии (падение сервера → работа из кеша → «обновить на сервере» / «отменить» / «сохранить копией»).
-
-## Стикер-паки
-
-Стикеры берутся из папки `/var/lib/liro/stickers` (переменная `LIRO_STICKERS`): каждая подпапка — это пак,
-внутри картинки `png`, `svg`, `webp`, `gif` или `jpg`. Название пака можно задать в `pack.json`:
-
-```json
-{ "name": "Мои стикеры" }
+```
+server/   Node.js server: HTTP API, WebSocket sync, storage, discovery, backups
+web/      board UI shared by the browser and the desktop client
+client/   Electron desktop client: discovery, local cache, offline mode
+deploy/   install / update / configure scripts for Linux and Windows
 ```
 
-Новые паки появляются у клиентов при следующем открытии панели «Стикеры», перезапускать сервер не нужно.
-Встроенные паки лежат в `server/stickers`. Поставленный на доску стикер копируется в медиа доски,
-поэтому он доступен офлайн.
+## License
 
-## Шрифты и свои фигуры
+Liro is released under the [MIT License](LICENSE). Bundled fonts, icons, stickers and libraries keep their own
+licenses — see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-- Шрифты: встроенные лежат в `server/fonts` (Open Sans, Roboto, Montserrat, PT Sans/Serif, Inter, Caveat
-  и другие — лицензии OFL/Apache/UFL, файлы лицензий рядом; Cascadia Code/Mono взяты из Windows, лицензия OFL).
-  Загруженные с клиента («Шрифт» → «Загрузить шрифт…») сохраняются в `<данные>/fonts`.
-  Шрифты Windows вроде Arial или Segoe UI сюда не включены — их лицензия не разрешает раздавать файлы.
-- Свои фигуры: библиотека фигур → «Свои фигуры» → «Загрузить SVG». Файлы очищаются от скриптов
-  и хранятся в `<данные>/shapes`; список обновляется у всех подключённых клиентов.
-- Иконки вложенных досок — Tabler Icons (MIT), `web/icons/board`. Можно добавить свои SVG туда же
-  и дописать имя в `index.json`.
+Liro is an independent project and is not affiliated with Miro or Milanote; their names are trademarks of their respective owners.

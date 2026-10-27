@@ -362,3 +362,4 @@ input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent)
 .cl-drop { position: absolute; height: 3px; border-radius: 2px; background: var(--accent); pointer-events: none; z-index: 6; }
 .dropdown-menu { position: fixed; z-index: 60; }
 .icon-picker .row { gap: 6px; } .icon-picker .row input { flex: 1; min-width: 0; width: auto; } .ip-upload { flex-shrink: 0; width: 36px; height: 36px; display: grid; place-items: center; padding: 0; }
+.el-line .txt.line-label { white-space: nowrap; max-width: none; }
