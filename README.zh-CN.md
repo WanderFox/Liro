@@ -9,7 +9,7 @@
 
 [English](README.md) · [Русский](README.ru.md) · **中文**
 
-![License: MIT](https://img.shields.io/badge/license-MIT-4262ff)
+![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-4262ff)
 ![Server: Linux | Windows](https://img.shields.io/badge/server-Linux%20%7C%20Windows-2b2b35)
 ![Clients: Windows | Linux AppImage | Browser](https://img.shields.io/badge/clients-Windows%20%7C%20Linux%20AppImage%20%7C%20Browser-2b2b35)
 ![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-8fd14f)
@@ -195,7 +195,7 @@ deploy/   适用于 Linux 和 Windows 的安装、更新和配置脚本
 
 ## 许可证
 
-Liro 以 [MIT 许可证](LICENSE) 发布。内置的字体、图标、贴纸和库保留各自的许可证 ——
+Liro 是以 [GNU 通用公共许可证 v3.0](LICENSE) 发布的自由软件。内置的字体、图标、贴纸和库保留各自的许可证 ——
 详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 Liro 是一个独立项目，与 Miro 或 Milanote 无关；其名称均为各自所有者的商标。

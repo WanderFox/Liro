@@ -9,7 +9,7 @@ Inspired by Miro and Milanote — but your boards live on your own server, work 
 
 **English** · [Русский](README.ru.md) · [中文](README.zh-CN.md)
 
-![License: MIT](https://img.shields.io/badge/license-MIT-4262ff)
+![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-4262ff)
 ![Server: Linux | Windows](https://img.shields.io/badge/server-Linux%20%7C%20Windows-2b2b35)
 ![Clients: Windows | Linux AppImage | Browser](https://img.shields.io/badge/clients-Windows%20%7C%20Linux%20AppImage%20%7C%20Browser-2b2b35)
 ![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-8fd14f)
@@ -195,7 +195,7 @@ deploy/   install / update / configure scripts for Linux and Windows
 
 ## License
 
-Liro is released under the [MIT License](LICENSE). Bundled fonts, icons, stickers and libraries keep their own
+Liro is free software released under the [GNU General Public License v3.0](LICENSE). Bundled fonts, icons, stickers and libraries keep their own
 licenses — see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Liro is an independent project and is not affiliated with Miro or Milanote; their names are trademarks of their respective owners.

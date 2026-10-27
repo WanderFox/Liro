@@ -12,7 +12,7 @@
   },
   "type": "module",
   "main": "src/index.js",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "engines": {
     "node": ">=18.17"
   },

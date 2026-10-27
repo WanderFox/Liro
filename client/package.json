@@ -12,7 +12,7 @@
     "url": "https://github.com/WanderFox/Liro/issues"
   },
   "author": "Liro",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "main": "main.js",
   "scripts": {
     "sync-web": "node scripts/sync-web.js",
