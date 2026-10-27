@@ -186,6 +186,13 @@ cd client && npm install && npm run dist:win   # установщик и пор�
 cd client && bash build-linux.sh               # AppImage для Linux (на Linux или в WSL)
 ```
 
+**Релизы** собирает GitHub Actions: отправьте тег версии — и сценарий прогонит тесты, соберёт клиенты для Windows
+и Linux и архив сервера и опубликует их как релиз.
+
+```bash
+git tag v1.1.0 && git push origin v1.1.0
+```
+
 ```
 server/   сервер на Node.js: HTTP API, синхронизация по WebSocket, хранение, обнаружение, бэкапы
 web/      интерфейс доски, общий для браузера и десктопного клиента

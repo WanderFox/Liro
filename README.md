@@ -186,6 +186,13 @@ cd client && npm install && npm run dist:win   # Windows installer + portable (o
 cd client && bash build-linux.sh               # Linux AppImage (on Linux or WSL)
 ```
 
+**Releases** are built by GitHub Actions: push a version tag and the workflow runs the tests, builds the Windows
+and Linux clients and the server archive, and publishes them as a release.
+
+```bash
+git tag v1.1.0 && git push origin v1.1.0
+```
+
 ```
 server/   Node.js server: HTTP API, WebSocket sync, storage, discovery, backups
 web/      board UI shared by the browser and the desktop client

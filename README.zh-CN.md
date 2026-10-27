@@ -186,6 +186,13 @@ cd client && npm install && npm run dist:win   # Windows 安装版和便携版�
 cd client && bash build-linux.sh               # Linux AppImage（在 Linux 或 WSL 中）
 ```
 
+**发布版本** 由 GitHub Actions 自动构建：推送版本标签后，工作流会运行测试、构建 Windows 和 Linux
+客户端以及服务器归档，并将它们发布为一个 Release。
+
+```bash
+git tag v1.1.0 && git push origin v1.1.0
+```
+
 ```
 server/   Node.js 服务器：HTTP API、WebSocket 同步、存储、发现、备份
 web/      浏览器和桌面客户端共用的白板界面

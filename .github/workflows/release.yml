@@ -1,0 +1,145 @@
+# Builds Liro and publishes a GitHub release when a version tag (vX.Y.Z) is pushed:
+#   git tag v1.1.0 && git push origin v1.1.0
+# Run it by hand (Actions → Release → Run workflow) to build without publishing.
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish a release (needs an existing vX.Y.Z tag in "tag")'
+        type: boolean
+        default: false
+      tag:
+        description: 'Tag to publish, e.g. v1.1.0'
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # The tag that triggered the run, or the one given by hand.
+  TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - id: v
+        run: |
+          if [[ "$TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          else
+            # Manual build without a tag: a pre-release version marked with the run number.
+            echo "version=0.0.0-dev.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - name: Server tests
+        working-directory: server
+        run: |
+          npm ci --no-fund --no-audit
+          npm test
+
+  windows:
+    needs: [version, test]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - name: Build installer and portable exe
+        working-directory: client
+        shell: bash
+        run: |
+          npm ci --no-fund --no-audit
+          npm version "${{ needs.version.outputs.version }}" --no-git-tag-version --allow-same-version
+          npm run sync-web
+          npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            client/dist/*.exe
+          if-no-files-found: error
+
+  linux:
+    needs: [version, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - name: Build AppImage
+        working-directory: client
+        run: |
+          npm ci --no-fund --no-audit
+          npm version "${{ needs.version.outputs.version }}" --no-git-tag-version --allow-same-version
+          npm run sync-web
+          npx electron-builder --linux --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: client/dist/*.AppImage
+          if-no-files-found: error
+
+  server:
+    needs: [version, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Server archive
+        run: git archive --format=tar.gz --prefix=liro/ -o liro-src.tar.gz HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server
+          path: liro-src.tar.gz
+          if-no-files-found: error
+
+  release:
+    needs: [version, windows, linux, server]
+    if: github.event_name == 'push' || inputs.publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: assets
+          merge-multiple: true
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          ls -l assets
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # A release created by hand for this tag: just (re)attach the files.
+            gh release upload "$TAG" assets/* --clobber
+          else
+            notes="$(mktemp)"
+            sed "s/{{VERSION}}/$VERSION/g" .github/release-notes.md > "$notes"
+            gh release create "$TAG" assets/* --verify-tag --title "Liro $VERSION" --notes-file "$notes" --generate-notes
+          fi
